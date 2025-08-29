@@ -2,14 +2,48 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## AI Guidance
+
+* Ignore GEMINI.md and GEMINI-*.md files
+* To save main context space, for code searches, inspections, troubleshooting or analysis, use code-searcher subagent where appropriate - giving the subagent full context background for the task(s) you assign it.
+* After receiving tool results, carefully reflect on their quality and determine optimal next steps before proceeding. Use your thinking to plan and iterate based on this new information, and then take the best next action.
+* For maximum efficiency, whenever you need to perform multiple independent operations, invoke all relevant tools simultaneously rather than sequentially.
+* Before you finish, please verify your solution
+* Do what has been asked; nothing more, nothing less.
+* NEVER create files unless they're absolutely necessary for achieving your goal.
+* ALWAYS prefer editing an existing file to creating a new one.
+* NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
+* When you update or modify core context files, also update markdown documentation and memory bank
+* When asked to commit changes, exclude CLAUDE.md and CLAUDE-*.md referenced memory bank system files from any commits. Never delete these files.
+
+## Memory Bank System
+
+This project uses a structured memory bank system with specialized context files. Always check these files for relevant information before starting work:
+
+### Core Context Files
+
+* **CLAUDE-activeContext.md** - Current session state, goals, and progress (if exists)
+* **CLAUDE-patterns.md** - Established code patterns and conventions (if exists)
+* **CLAUDE-decisions.md** - Architecture decisions and rationale (if exists)
+* **CLAUDE-troubleshooting.md** - Common issues and proven solutions (if exists)
+* **CLAUDE-config-variables.md** - Configuration variables reference (if exists)
+* **CLAUDE-temp.md** - Temporary scratch pad (only read when referenced)
+
+**Important:** Always reference the active context file first to understand what's currently being worked on and maintain session continuity.
+
+### Memory Bank System Backups
+
+When asked to backup Memory Bank System files, you will copy the core context files above and @.claude settings directory to directory @/path/to/backup-directory. If files already exist in the backup directory, you will overwrite them.
+
 ## Project Overview
 
-This repository contains a structured AI-assisted product development workflow system with four core phases:
+This repository contains a structured AI-assisted product development workflow system with five core phases:
 
 1. **PRD Creation** (`create-prd.md`) - Generates Product Requirements Documents
 2. **Task Generation** (`generate-tasks.md`) - Converts PRDs into actionable task lists
 3. **Agent Creation** (`create-agent.md`) - Creates specialized sub-agents for each task domain
 4. **Task Processing** (`process-task-list.md`) - Manages task execution and completion
+5. **Knowledge Capture** (hooks + `/knowledge/`) - Automatic documentation via `/compact` summaries
 
 ## Workflow Architecture
 
@@ -36,6 +70,13 @@ This repository contains a structured AI-assisted product development workflow s
 - **Status Tracking**: `[ ]` → `[o]` → `[x]` progression
 - **Completion Protocol**: Test → Stage → Commit → Mark complete
 
+### Phase 5: Knowledge Capture
+- **Trigger**: SubagentStop hooks automatically execute after agent completion
+- **Process**: `/compact` command generates conversation summaries
+- **Storage**: Timestamped files in `/knowledge/` directory
+- **Organization**: Helper scripts sort by feature and agent type
+- **Output**: Structured knowledge base with cross-reference index
+
 ## File Structure and Conventions
 
 ### Directory Structure
@@ -48,9 +89,21 @@ This repository contains a structured AI-assisted product development workflow s
 ├── /tasks/                 # Generated PRDs and task lists
 │   ├── prd-[feature].md
 │   └── tasks-prd-[feature].md
-└── /.claude/agents/        # Generated specialized sub-agents
-    ├── [feature]-[type]-agent.md
-    └── [feature]-[type]-agent.md
+├── /.claude/               # Claude Code configuration
+│   ├── settings.json       # Hooks configuration for auto-documentation
+│   └── agents/             # Generated specialized sub-agents
+│       ├── [feature]-[type]-agent.md
+│       └── [feature]-[type]-agent.md
+├── /knowledge/             # Automatic documentation knowledge base
+│   ├── README.md           # Knowledge base documentation
+│   ├── [timestamp]-agent-summary.md  # Raw compact summaries (temporary)
+│   └── organized/          # Organized summaries by feature/agent
+│       ├── [feature]/
+│       │   ├── [agent-type]-summary-001.md
+│       │   └── [agent-type]-summary-002.md
+│       └── index.md        # Cross-reference index
+└── /scripts/               # Helper automation scripts
+    └── organize-agent-summary.sh  # Organizes raw summaries
 ```
 
 ### Task Status Indicators

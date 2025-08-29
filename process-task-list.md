@@ -39,6 +39,16 @@ Guidelines for managing task lists in markdown files to track progress on comple
    - List every file created or modified.
    - Give each file a one‑line description of its purpose.
 
+## Automatic Documentation
+
+**Knowledge Capture**: When specialized agents complete their tasks, Claude Code hooks automatically:
+- Execute `/compact` command to summarize the conversation
+- Save summaries to `/knowledge/` directory with timestamps
+- Organize summaries by feature and agent type using helper scripts
+- Update knowledge base index for easy reference
+
+**No Manual Documentation Required**: Agents focus on implementation; hooks handle documentation automatically.
+
 ## AI Instructions
 
 When working with task lists, the AI must:
@@ -52,3 +62,4 @@ When working with task lists, the AI must:
 4. Keep "Relevant Files" accurate and up to date.
 5. Before starting work, check which sub‑task is next.
 6. After implementing a sub‑task, update the file and then pause for user approval.
+7. **Trust the hooks**: Focus on implementation quality; documentation happens automatically via SubagentStop hooks.

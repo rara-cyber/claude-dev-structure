@@ -93,6 +93,16 @@ Each system prompt must include:
    API design patterns for backend agents, testing frameworks for testing agents]
    ```
 
+6. **Automatic Documentation:**
+   ```
+   ## Automatic Documentation
+   Your work is automatically documented through Claude Code hooks:
+   - When you complete tasks, `/compact` runs automatically  
+   - Conversation summaries are saved to the knowledge base
+   - Focus on implementation quality; documentation is handled automatically
+   - No need to create manual documentation files unless specifically requested
+   ```
+
 ## Agent Types by Task Domain
 
 ### UI/Frontend Agents
@@ -131,13 +141,24 @@ Ensure the following structure exists:
     └── [feature-name]-[task-type]-agent.md
 ```
 
+## Automatic Documentation Integration
+
+Each generated agent automatically participates in knowledge capture through Claude Code hooks:
+
+### Hook-Based Workflow
+- **SubagentStop Hook**: When an agent completes, automatically executes `/compact` command
+- **Knowledge Storage**: Compact summaries saved to `/knowledge/` directory  
+- **Organization**: Helper scripts categorize summaries by feature and agent type
+- **Zero Manual Work**: Agents focus on implementation; documentation happens automatically
+
 ## Integration with Existing Workflow
 
-This creates a **4-phase workflow**:
+This creates a **5-phase workflow**:
 1. **PRD Creation** → `prd-[feature-name].md`
 2. **Task Generation** → `tasks-prd-[feature-name].md`  
 3. **Agent Creation** → `/.claude/agents/[feature-name]-*-agent.md`
 4. **Task Execution** → Using specialized agents for implementation
+5. **Knowledge Capture** → Automatic `/compact` and organization via hooks
 
 ## Output Format
 

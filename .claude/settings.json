@@ -1,0 +1,38 @@
+{
+  "model": "sonnet",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "terminal-notifier -title 'Claude Code' -subtitle 'Session Complete' -message \"Finished working in $(basename \"$PWD\")\" -sound default -timeout 10"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Agent completed - running compact and save' && claude compact --save-to $CLAUDE_PROJECT_DIR/knowledge/$(date +%Y%m%d-%H%M%S)-agent-summary.md"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/scripts/organize-agent-summary.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
