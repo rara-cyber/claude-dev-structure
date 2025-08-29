@@ -7,9 +7,11 @@ To guide an AI assistant in creating a detailed Product Requirements Document (P
 ## Process
 
 1.  **Receive Initial Prompt:** The user provides a brief description or request for a new feature or functionality.
-2.  **Ask Clarifying Questions:** Before writing the PRD, the AI *must* ask clarifying questions to gather sufficient detail. The goal is to understand the "what" and "why" of the feature, not necessarily the "how" (which the developer will figure out). Make sure to provide options in letter/number lists so I can respond easily with my selections.
-3.  **Generate PRD:** Based on the initial prompt and the user's answers to the clarifying questions, generate a PRD using the structure outlined below.
-4.  **Save PRD:** Save the generated document as `prd-[feature-name].md` inside the `/tasks` directory.
+2.  **Validate Current Context:** Use the memory-bank-synchronizer agent to review existing patterns, decisions, and active context to understand how this feature fits within current system architecture.
+3.  **Ask Clarifying Questions:** Before writing the PRD, the AI *must* ask clarifying questions to gather sufficient detail. The goal is to understand the "what" and "why" of the feature, not necessarily the "how" (which the developer will figure out). Make sure to provide options in letter/number lists so I can respond easily with my selections.
+4.  **Generate PRD:** Based on the initial prompt and the user's answers to the clarifying questions, generate a PRD using the structure outlined below.
+5.  **Save PRD:** Save the generated document as `prd-[feature-name].md` inside the `/tasks` directory.
+6.  **Update Memory Bank:** Use the memory-bank-synchronizer agent to update CLAUDE-patterns.md with any new patterns identified and CLAUDE-decisions.md with architectural decisions made during PRD creation.
 
 ## Clarifying Questions (Examples)
 
@@ -49,8 +51,18 @@ Assume the primary reader of the PRD is a **junior developer**. Therefore, requi
 *   **Location:** `/tasks/`
 *   **Filename:** `prd-[feature-name].md`
 
+## Memory Bank Integration
+
+The PRD creation process actively uses the memory-bank-synchronizer agent to:
+- **Pre-Creation:** Review current system patterns and architectural decisions
+- **During Creation:** Validate feature alignment with existing architecture
+- **Post-Creation:** Update memory bank with new patterns and decisions discovered
+
+This ensures PRDs are consistent with current system state and architectural direction.
+
 ## Final instructions
 
 1. Do NOT start implementing the PRD
 2. Make sure to ask the user clarifying questions
 3. Take the user's answers to the clarifying questions and improve the PRD
+4. Use memory-bank-synchronizer agent for context validation and knowledge updates

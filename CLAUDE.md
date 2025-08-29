@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## AI Guidance
 
 * Ignore GEMINI.md and GEMINI-*.md files
+* **Memory-Bank-Synchronizer Integration**: Use the memory-bank-synchronizer agent proactively at key workflow points to ensure memory bank accuracy and system knowledge consistency
 * To save main context space, for code searches, inspections, troubleshooting or analysis, use code-searcher subagent where appropriate - giving the subagent full context background for the task(s) you assign it.
 * After receiving tool results, carefully reflect on their quality and determine optimal next steps before proceeding. Use your thinking to plan and iterate based on this new information, and then take the best next action.
 * For maximum efficiency, whenever you need to perform multiple independent operations, invoke all relevant tools simultaneously rather than sequentially.
@@ -13,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 * NEVER create files unless they're absolutely necessary for achieving your goal.
 * ALWAYS prefer editing an existing file to creating a new one.
 * NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
-* When you update or modify core context files, also update markdown documentation and memory bank
+* When you update or modify core context files, also update markdown documentation and memory bank using memory-bank-synchronizer
 * When asked to commit changes, exclude CLAUDE.md and CLAUDE-*.md referenced memory bank system files from any commits. Never delete these files.
 
 ## Memory Bank System
@@ -30,6 +31,15 @@ This project uses a structured memory bank system with specialized context files
 * **CLAUDE-temp.md** - Temporary scratch pad (only read when referenced)
 
 **Important:** Always reference the active context file first to understand what's currently being worked on and maintain session continuity.
+
+### Memory Bank Synchronization
+
+The memory bank system is **actively synchronized** using the memory-bank-synchronizer agent:
+- **Automatic Updates**: Hooks trigger synchronization at key workflow points (session start, agent completion, knowledge organization)
+- **Pattern Validation**: Ensures documented patterns match actual implementation
+- **Decision Tracking**: Updates architectural decisions with current outcomes
+- **Context Continuity**: Maintains accurate session state across interactions
+- **Proactive Usage**: Use memory-bank-synchronizer explicitly at major workflow transitions
 
 ### Memory Bank System Backups
 
@@ -49,33 +59,38 @@ This repository contains a structured AI-assisted product development workflow s
 
 ### Phase 1: PRD Generation
 - **Input**: User prompt for a new feature
-- **Process**: Ask clarifying questions, then generate structured PRD
+- **Process**: Validate context with memory-bank-synchronizer → Ask clarifying questions → Generate structured PRD → Update memory bank
 - **Output**: `prd-[feature-name].md` in `/tasks/` directory
 - **Key Rule**: MUST ask clarifying questions before writing PRD
+- **Memory Integration**: Use memory-bank-synchronizer for context validation and pattern updates
 
 ### Phase 2: Task List Generation  
 - **Input**: Reference to existing PRD file
-- **Process**: Two-phase approach with user confirmation between phases
+- **Process**: Sync memory bank → Analyze PRD → Generate parent tasks → wait for "Go" → Generate sub-tasks → Update memory bank
 - **Output**: `tasks-[prd-file-name].md` in `/tasks/` directory
 - **Critical Flow**: Generate parent tasks → wait for "Go" → generate sub-tasks
+- **Memory Integration**: Pre-generation sync and post-generation pattern updates
 
 ### Phase 3: Agent Creation
 - **Input**: Reference to existing task list file
-- **Process**: Generate specialized sub-agents for each parent task domain
+- **Process**: Sync memory bank → Analyze tasks → Generate specialized sub-agents → Update memory bank
 - **Output**: Multiple `.claude/agents/[feature-name]-[task-type]-agent.md` files
 - **Key Rule**: Each agent follows Anthropic 2025 sub-agent best practices
+- **Memory Integration**: Pattern validation and agent coordination documentation
 
 ### Phase 4: Task Execution
-- **Process**: One sub-task at a time with user permission between tasks, using specialized agents
+- **Process**: Sync memory bank → Execute tasks with specialized agents → Update patterns and decisions
 - **Status Tracking**: `[ ]` → `[o]` → `[x]` progression
 - **Completion Protocol**: Test → Stage → Commit → Mark complete
+- **Memory Integration**: Pre-execution validation and post-execution pattern updates
 
 ### Phase 5: Knowledge Capture
 - **Trigger**: SubagentStop hooks automatically execute after agent completion
-- **Process**: `/compact` command generates conversation summaries
+- **Process**: `/compact` → organize summaries → memory-bank-synchronizer updates patterns
 - **Storage**: Timestamped files in `/knowledge/` directory
-- **Organization**: Helper scripts sort by feature and agent type
-- **Output**: Structured knowledge base with cross-reference index
+- **Organization**: Helper scripts sort by feature and agent type, then sync memory bank
+- **Output**: Structured knowledge base with cross-reference index and updated memory bank
+- **Memory Integration**: Automatic pattern extraction and memory bank synchronization
 
 ## File Structure and Conventions
 

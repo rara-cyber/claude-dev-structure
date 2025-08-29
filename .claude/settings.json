@@ -19,6 +19,10 @@
           {
             "type": "command",
             "command": "echo 'Agent completed - running compact and save' && claude compact --save-to $CLAUDE_PROJECT_DIR/knowledge/$(date +%Y%m%d-%H%M%S)-agent-summary.md"
+          },
+          {
+            "type": "command",
+            "command": "echo 'Synchronizing memory bank with latest changes' && claude task --subagent-type memory-bank-synchronizer --description 'Sync memory bank' --prompt 'Synchronize memory bank files with current codebase state after agent completion. Update patterns, decisions, and active context based on recent changes and discoveries.'"
           }
         ]
       }
@@ -30,6 +34,17 @@
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/scripts/organize-agent-summary.sh"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Session starting - validating memory bank' && claude task --subagent-type memory-bank-synchronizer --description 'Session start sync' --prompt 'Validate memory bank accuracy at session start. Check if CLAUDE-patterns.md, CLAUDE-decisions.md, and CLAUDE-activeContext.md reflect current codebase state.'"
           }
         ]
       }

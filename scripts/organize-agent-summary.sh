@@ -2,6 +2,7 @@
 
 # organize-agent-summary.sh
 # Organizes raw agent summaries from hooks into structured knowledge base
+# Integrated with memory-bank-synchronizer for automatic pattern validation
 
 set -e
 
@@ -134,3 +135,7 @@ index_file="$ORGANIZED_DIR/index.md"
 } > "$index_file"
 
 echo "Knowledge base organization complete. Index updated."
+
+# Trigger memory bank synchronization after knowledge organization
+echo "Triggering memory bank synchronization..."
+claude task --subagent-type memory-bank-synchronizer --description "Post-organization sync" --prompt "Knowledge base has been updated with new organized summaries. Analyze the new knowledge and update CLAUDE-patterns.md, CLAUDE-decisions.md, and CLAUDE-activeContext.md to reflect any patterns, decisions, or context changes discovered in the latest agent summaries. Focus on extracting reusable patterns and architectural insights."
